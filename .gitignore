@@ -1,0 +1,17 @@
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+*.csv
+*.ipynb_checkpoints
+*.pyc
+*.out
+*.DS_Store
+*.swp
+*.pdf
+*.tex
+__pycache__
