@@ -19,7 +19,10 @@ from plotters import plotters
 
 def run(params_func, random_seed, prefix, eps):
     params = params_func(random_seed = random_seed, eps = eps)
-    dist_file = prefix + params['name'] + '|'+ 'eps=' + str(eps) + '|' + 'random_seed=' + str(random_seed) + '|.csv'
+    dist_file = (prefix + params['name'] + '|'
+                 + 'eps=' + str(eps) + '|'
+                 + 'n_action=' + str(params['env']['n_action']) + '|'
+                 + 'random_seed=' + str(random_seed) + '|.csv')
     worker = settings_dict['worker'][params['worker']](params)
     worker.run()
     worker.save(dist_file)
@@ -68,7 +71,7 @@ if __name__ == "__main__":
                         help='number of action')
     parser.add_argument('--eps', type = float, nargs = '+', default=[1],
                         help='privacy epsilon')
-    parser.add_argument('--dest', type = str, default = pdir + '/results/crpm/',
+    parser.add_argument('--dest', type = str, default = '/results/crpm/',
                         help='destination folders')
  
     args = parser.parse_args()
