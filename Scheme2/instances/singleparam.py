@@ -4,7 +4,6 @@ import glob
 import argparse
 import numpy as np
 import pandas as pd
-from math import sqrt
 from itertools import product
 from functools import partial
 from multiprocessing import Pool, cpu_count
@@ -29,7 +28,7 @@ def generate_params(args):
     random_seeds = range(n_random_seeds)
     
     theta = np.random.normal(0, 1, size=(d, 1))
-    theta = theta/sqrt(theta.T.dot(theta))
+    theta = theta/np.sqrt(theta.T.dot(theta))
     
     common_params = partial(wrap_params, \
                             dimension = d, n_action = k, T = T, \

@@ -1,5 +1,5 @@
 from mechanisms import Mechanism
-from math import sqrt, log, exp, pi
+from math import log, exp, pi
 import numpy as np
 from scipy.special import gamma
 
@@ -19,7 +19,7 @@ class NMechanism(Mechanism):
 class OLSMechanism(Mechanism):
     def __init__(self, params):
         super().__init__(params)
-        self.sigma = 6*sqrt(2*log(2.5/self.delta))/self.epsilon
+        self.sigma = 6*np.sqrt(2*log(2.5/self.delta))/self.epsilon
 
     def perturb(self):
         noise_covariance = np.random.normal(0, self.sigma, size=(self.d,self.d))
@@ -47,18 +47,18 @@ class SGDLDPMechanism(Mechanism):
         self.k = params['env']['n_action']
         self.d = params['env']['dimension']
         self.env_s = params['env']['instance_variance']
-        self.B = (exp(self.epsilon) + 1)/(exp(self.epsilon) - 1) * sqrt(pi) / 2 * self.d * gamma((self.d - 1)/2 + 1)/ gamma(self.d/2 + 1)
+        self.B = (exp(self.epsilon) + 1)/(exp(self.epsilon) - 1) * np.sqrt(pi) / 2 * self.d * gamma((self.d - 1)/2 + 1)/ gamma(self.d/2 + 1)
         self.threshold = exp(self.epsilon)/(exp(self.epsilon)+1)
         
     def pack(self, select_context, reward, server):
         gradient = (server.transform(np.clip(select_context.T.dot(server.theta), -20, 20)) - reward)*select_context
         noised_package = dict()
         x = gradient
-        x = x/sqrt(x.T.dot(x)) if np.random.uniform()> (1/2+sqrt(x.T.dot(x))/(2)) else -x/sqrt(x.T.dot(x))
+        x = x/np.sqrt(x.T.dot(x)) if np.random.uniform()> (1/2+np.sqrt(x.T.dot(x))/(2)) else -x/np.sqrt(x.T.dot(x))
         prob = np.random.uniform()
         while True:
             z = np.random.normal(0, self.env_s, (self.d, 1))
-            z = z/sqrt(z.T.dot(z))*self.B
+            z = z/np.sqrt(z.T.dot(z))*self.B
             if (((prob>self.threshold) and (z.T.dot(x)>0)) or ((prob<=self.threshold) and (z.T.dot(x)<=0))):
                 break
 
@@ -69,9 +69,9 @@ class SGDLDPMechanism(Mechanism):
 class GLMMechanism(Mechanism):
     def __init__(self, params):
         super().__init__(params)
-        self.sigma = 6*sqrt(2*log(2.5/self.delta))/self.epsilon
+        self.sigma = 6*np.sqrt(2*log(2.5/self.delta))/self.epsilon
         self.env_s = params['env']['instance_variance']
-        self.B = (exp(self.epsilon) + 1)/(exp(self.epsilon) - 1) * sqrt(pi) / 2 * self.d * gamma((self.d - 1)/2 + 1)/ gamma(self.d/2 + 1)
+        self.B = (exp(self.epsilon) + 1)/(exp(self.epsilon) - 1) * np.sqrt(pi) / 2 * self.d * gamma((self.d - 1)/2 + 1)/ gamma(self.d/2 + 1)
         self.threshold = exp(self.epsilon)/(exp(self.epsilon)+1)
 
     def perturb(self):
@@ -101,7 +101,7 @@ class LDPCovariateMechanism(Mechanism):
     def __init__(self, params):
         super().__init__(params)
         self.k = params['env']['n_action']
-        self.sigma = 6*sqrt(2*log(2.5/self.delta))/self.epsilon
+        self.sigma = 6*np.sqrt(2*log(2.5/self.delta))/self.epsilon
         
     def perturb():
         noise_covariance = np.random.normal(0, self.sigma, size=(self.d, self.d))

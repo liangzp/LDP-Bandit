@@ -1,5 +1,5 @@
 from mechanisms import Mechanism
-from math import sqrt, log, exp, pi
+from math import log, exp, pi
 import numpy as np
 from scipy.special import gamma
 
@@ -9,7 +9,7 @@ class ROLSMechanism(Mechanism):
     def __init__(self, params):
         super().__init__(params)
         self.r = r
-        self.sigma = (self.r+2)*sqrt(2*log(2.5/self.delta))/self.epsilon
+        self.sigma = (self.r+2)*np.sqrt(2*log(2.5/self.delta))/self.epsilon
 
     def perturb(self):
         noise_covariance = np.random.normal(0, self.sigma, size=(self.d,self.d))
@@ -38,20 +38,20 @@ class RSGDLDPMechanism(Mechanism):
         self.d = params['env']['dimension']
         self.env_s = params['env']['instance_variance']
         self.r = r
-        self.B = self.r*(exp(self.epsilon) + 1)/(exp(self.epsilon) - 1) * sqrt(pi) / 2 * self.d * gamma((self.d - 1)/2 + 1)/ gamma(self.d/2 + 1)
+        self.B = self.r*(exp(self.epsilon) + 1)/(exp(self.epsilon) - 1) * np.sqrt(pi) / 2 * self.d * gamma((self.d - 1)/2 + 1)/ gamma(self.d/2 + 1)
         self.threshold = exp(self.epsilon)/(exp(self.epsilon)+1)
 
-        self.sigma = (self.r+2)*sqrt(2*log(2.5/self.delta))/self.epsilon
+        self.sigma = (self.r+2)*np.sqrt(2*log(2.5/self.delta))/self.epsilon
 
     def pack(self, select_context, reward, server):
         gradient = (server.transform(select_context.T.dot(server.theta)) - reward)*select_context
         noised_package = dict()
         x = gradient
-        x = self.r*x if np.random.uniform()> (1/2+sqrt(x.T.dot(x))/(2*self.r)) else -self.r*x/sqrt(x.T.dot(x))
+        x = self.r*x if np.random.uniform()> (1/2+np.sqrt(x.T.dot(x))/(2*self.r)) else -self.r*x/np.sqrt(x.T.dot(x))
         prob = np.random.uniform()
         while True:
             z = np.random.normal(0, self.env_s, (self.d, 1))
-            z = z/sqrt(z.T.dot(z))*self.B
+            z = z/np.sqrt(z.T.dot(z))*self.B
             if (((prob>self.threshold) and (z.T.dot(x)>0)) or ((prob<=self.threshold) and (z.T.dot(x)<=0))):
                 break
 
@@ -65,8 +65,8 @@ class RGLMMechanism(Mechanism):
         super().__init__(params)
         self.env_s = params['env']['instance_variance']
         self.r = r
-        self.B = self.r*(exp(self.epsilon) + 1)/(exp(self.epsilon) - 1) * sqrt(pi) / 2 * self.d * gamma((self.d - 1)/2 + 1)/ gamma(self.d/2 + 1)
-        self.sigma = (self.r+2)*sqrt(2*log(2.5/self.delta))/self.epsilon
+        self.B = self.r*(exp(self.epsilon) + 1)/(exp(self.epsilon) - 1) * np.sqrt(pi) / 2 * self.d * gamma((self.d - 1)/2 + 1)/ gamma(self.d/2 + 1)
+        self.sigma = (self.r+2)*np.sqrt(2*log(2.5/self.delta))/self.epsilon
         self.threshold = exp(self.epsilon)/(exp(self.epsilon)+1)
 
     def perturb(self):
