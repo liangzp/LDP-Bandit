@@ -54,11 +54,11 @@ class SGDLDPMechanism(Mechanism):
         gradient = (server.transform(np.clip(select_context.T.dot(server.theta), -20, 20)) - reward)*select_context
         noised_package = dict()
         x = gradient
-        x = x/sqrt(x.T.dot(x)) if np.random.uniform()> (1/2+sqrt(x.T.dot(x))/(2)) else -x/sqrt(x.T.dot(x))
+        x = x/np.sqrt(x.T.dot(x)) if np.random.uniform()> (1/2+np.sqrt(x.T.dot(x))/(2)) else -x/np.sqrt(x.T.dot(x))
         prob = np.random.uniform()
         while True:
             z = np.random.normal(0, self.env_s, (self.d, 1))
-            z = z/sqrt(z.T.dot(z))*self.B
+            z = z/np.sqrt(z.T.dot(z))*self.B
             if (((prob>self.threshold) and (z.T.dot(x)>0)) or ((prob<=self.threshold) and (z.T.dot(x)<=0))):
                 break
 

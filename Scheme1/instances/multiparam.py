@@ -84,13 +84,13 @@ def run(random_seed,
         theta_ols[:, i] /= sqrt(theta_ols[:, i].T.dot(theta_ols[:, i]))
 
     theta_ucb = np.random.normal(0, 1, (d*k, 1))
-    theta_ucb /= sqrt(theta_ucb.T.dot(theta_ucb))
+    theta_ucb /= np.sqrt(theta_ucb.T.dot(theta_ucb))
 
     theta_gloc = np.random.normal(0, 1, (d*k, 1))
-    theta_gloc /= sqrt(theta_gloc.T.dot(theta_gloc))
+    theta_gloc /= np.sqrt(theta_gloc.T.dot(theta_gloc))
 
     theta_gloc_h = np.random.normal(0, 1, (d*k, 1))
-    theta_gloc_h /= sqrt(theta_gloc_h.T.dot(theta_gloc_h))
+    theta_gloc_h /= np.sqrt(theta_gloc_h.T.dot(theta_gloc_h))
 
     # theta setting
     # theta = np.zeros((d, k)) 
@@ -102,7 +102,7 @@ def run(random_seed,
     # theta setting 2
     theta = np.random.normal(0, 1, (d, k)) 
     for i in range(k):
-        theta[:, i] /= sqrt(theta[:, i].T.dot(theta[:, i]))
+        theta[:, i] /= np.sqrt(theta[:, i].T.dot(theta[:, i]))
 
     context = np.random.normal(0, 1, (d, 1))
     # context /= sqrt(context.T.dot(context))
@@ -150,7 +150,7 @@ def run(random_seed,
         action_values = []
         for i in range(linear_contexts.shape[1]):
             x = linear_contexts[:,i]
-            UCB_value = theta_ucb.T.dot(x)[0]+beta*sqrt(x.T.dot(temp_matrix).dot(x))
+            UCB_value = theta_ucb.T.dot(x)[0]+beta*np.sqrt(x.T.dot(temp_matrix).dot(x))
             action_values.append(UCB_value)
         select_index_ucb = np.argmax(action_values)
 
@@ -162,7 +162,7 @@ def run(random_seed,
         action_values = []
         for i in range(linear_contexts.shape[1]):
             x = linear_contexts[:,i]
-            GLOC_value = theta_gloc.T.dot(x)[0]+beta*sqrt(x.T.dot(temp_matrix).dot(x))
+            GLOC_value = theta_gloc.T.dot(x)[0]+beta*np.sqrt(x.T.dot(temp_matrix).dot(x))
             action_values.append(GLOC_value)
         select_index_gloc = np.argmax(action_values)
 
@@ -213,13 +213,13 @@ def run(random_seed,
 
             x = gradients
             if (x.T.dot(x)>0):
-                x = x/sqrt(x.T.dot(x)) if np.random.uniform()> (1/2+sqrt(x.T.dot(x))/(2)) else -x/sqrt(x.T.dot(x))
+                x = x/np.sqrt(x.T.dot(x)) if np.random.uniform()> (1/2+np.sqrt(x.T.dot(x))/(2)) else -x/np.sqrt(x.T.dot(x))
             else:
                 raise Exception("Sorry, x is a zero vector")
             prob = np.random.uniform()
             while True:
                 z = np.random.normal(0, 1, (d*k, 1))
-                z = z/sqrt(z.T.dot(z))*B
+                z = z/np.sqrt(z.T.dot(z))*B
                 if (((prob>threshold) and (z.T.dot(x)>0)) or ((prob<=threshold) and (z.T.dot(x)<=0))):
                     break
             eta = k*5/(t+1)

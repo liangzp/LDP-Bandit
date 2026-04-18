@@ -9,7 +9,7 @@ class GaussianLinearEnvironment(Environment):
     def __init__(self, params):
         super().__init__(params)
         self.theta = np.random.normal(0, self.env_s, size=(self.d, 1))
-        self.theta = self.theta/sqrt(self.theta.T.dot(self.theta))
+        self.theta = self.theta/np.sqrt(self.theta.T.dot(self.theta))
         self.context_type = params['env']['context_type']
         self.mode = params['env']['yx']
         if self.mode == 'normal':
@@ -42,7 +42,7 @@ class GaussianLinearEnvironment(Environment):
     def generate_contexts(self):
         contexts = np.random.normal(0, self.env_s, (self.d, self.k))
         for i in range(contexts.shape[1]):
-            contexts[:, i] /= sqrt(contexts[:, i].T.dot(contexts[:, i]))
+            contexts[:, i] /= np.sqrt(contexts[:, i].T.dot(contexts[:, i]))
         self.cache_contexts = contexts
         return np.array(contexts)
     

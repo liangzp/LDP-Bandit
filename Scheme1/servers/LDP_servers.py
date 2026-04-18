@@ -167,7 +167,7 @@ class GreedySGDServer(Server):
           
     def initialize(self, params):
         self.theta = np.random.normal(0, self.env_s, size=(self.d, 1))
-        self.theta = self.theta/sqrt(self.theta.T.dot(self.theta))
+        self.theta = self.theta/np.sqrt(self.theta.T.dot(self.theta))
         self.reward = params['env']['yx']
         if self.reward == 'normal':
             self.transform = lambda x: x
@@ -210,14 +210,14 @@ class LDPGLMServer(Server):
         self.I = np.eye(self.d)
         
         self.theta_h = np.random.normal(0, 1, size=(self.d, 1))
-        self.theta_h = self.theta_h/sqrt(self.theta_h.T.dot(self.theta_h))
+        self.theta_h = self.theta_h/np.sqrt(self.theta_h.T.dot(self.theta_h))
         
         self.theta_t = np.random.normal(0, 1, size=(self.d, 1))
-        self.theta_t = self.theta_t/sqrt(self.theta_t.T.dot(self.theta_t))
+        self.theta_t = self.theta_t/np.sqrt(self.theta_t.T.dot(self.theta_t))
         
         self.theta = self.theta_h
-        self.sigma = 6*sqrt(2*log(3.75/self.delta))/self.epsilon
-        self.zeta = 1/sqrt(self.T)
+        self.sigma = 6*np.sqrt(2*log(3.75/self.delta))/self.epsilon
+        self.zeta = 1/np.sqrt(self.T)
         self.reward = params['env']['yx']
         if self.reward == 'normal':
             self.transform = lambda x: x
@@ -240,7 +240,7 @@ class LDPGLMServer(Server):
         action_values = []
         for i in range(contexts.shape[1]):
             x = contexts[:,i]
-            UCB_value = self.theta_t.T.dot(x)+self.beta*sqrt(x.T.dot(temp_matrix).dot(x))
+            UCB_value = self.theta_t.T.dot(x)+self.beta*np.sqrt(x.T.dot(temp_matrix).dot(x))
             action_values.append(UCB_value)
         select_index = np.argmax(action_values)
         select_context = contexts[:, select_index].reshape((-1,1))
@@ -260,9 +260,9 @@ class LDPGLMServer(Server):
         self.theta = self.theta_h
         
     def update_params(self):
-        self.upsilon = self.sigma*sqrt(self.t)*(4*sqrt(self.d) + 2*log(2*self.T/self.alpha)) 
+        self.upsilon = self.sigma*np.sqrt(self.t)*(4*np.sqrt(self.d) + 2*log(2*self.T/self.alpha)) 
         self.c = 2*self.upsilon
-        self.beta = sqrt(self.sigma/self.mu*sqrt(self.d*self.t))
+        self.beta = np.sqrt(self.sigma/self.mu*np.sqrt(self.d*self.t))
         
 class RLUCBServer(Server):
     def __init__(self,params):
@@ -275,7 +275,7 @@ class RLUCBServer(Server):
         self.u = np.zeros((self.d, 1))
         self.theta = np.zeros((self.d, 1))
         self.r = 385
-        self.sigma = (self.r + 4)*sqrt(2*log(2.5/self.delta))/self.epsilon
+        self.sigma = (self.r + 4)*np.sqrt(2*log(2.5/self.delta))/self.epsilon
         self.c = 0
         self.t = 1
         self.update_params()
@@ -288,7 +288,7 @@ class RLUCBServer(Server):
         action_values = []
         for i in range(contexts.shape[1]):
             x = contexts[:,i]
-            UCB_value = self.theta.T.dot(x)+self.beta*sqrt(x.T.dot(temp_matrix).dot(x))
+            UCB_value = self.theta.T.dot(x)+self.beta*np.sqrt(x.T.dot(temp_matrix).dot(x))
             action_values.append(UCB_value)
         select_index = np.argmax(action_values)
         select_context = contexts[:, select_index].reshape((-1,1))
@@ -319,7 +319,7 @@ class ROLSServer(Server):
         self.u = np.zeros((self.d, 1))
         self.theta = np.zeros((self.d, 1))
         self.reward = params['env']['yx']
-        self.sigma = 6*sqrt(2*log(2.5/self.delta))/self.epsilon
+        self.sigma = 6*np.sqrt(2*log(2.5/self.delta))/self.epsilon
         self.c = 0
         self.t = 1
         self.update_params()
