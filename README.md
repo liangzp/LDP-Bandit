@@ -10,6 +10,11 @@ Please use the following command to install the dependencies:
 pip install -r requirements.txt
 ```
 
+If you use `uv`, install/sync the project dependencies with:
+```setup
+uv sync
+```
+
 ## Datasets: 
 
 We evaluate our algorithms in a real data [CRPM-12-001: On-Line Auto Lending dataset](https://www8.gsb.columbia.edu/cprm/research/datasets), provided by the Center for Pricing and Revenue Management at Columbia University.
@@ -45,14 +50,14 @@ For generating the figures in the paper please execute the following codes:
     + Single-param Experiments: 
     ```
     cd Scheme1
-    nohup python3 instances/singleparam.py --eps 1  --dest "/results/single-param-eps=1/" > singleparam.out 2>&1 &
-    nohup python3 instances/singleparam.py --eps 0.5  --dest "/results/single-param-eps=0.5/" > singleparam.out 2>&1 &
+    uv run instances/singleparam.py --eps 1  --dest "/results/single-param-eps=1/" > singleparam.out 2>&1 &
+    uv run instances/singleparam.py --eps 0.5  --dest "/results/single-param-eps=0.5/" > singleparam.out 2>&1 &
     ```
     + Multi-param Experiments in Figure 2: 
     ```
     cd Scheme1
-    nohup python3 instances/multiparam.py --eps 1  --dest "/results/multi-param-eps=1/" > multiparam.out 2>&1 &
-    nohup python3 instances/multiparam.py --eps 0.5  --dest "/results/multi-param-eps=0.5/" > multiparam.out 2>&1 &
+    uv run instances/multiparam.py --eps 1  --dest "/results/multi-param-eps=1/" > multiparam.out 2>&1 &
+    uv run instances/multiparam.py --eps 0.5  --dest "/results/multi-param-eps=0.5/" > multiparam.out 2>&1 &
     ```
 + Figure 3
     + Single-param Experiments: 
@@ -70,6 +75,12 @@ For generating the figures in the paper please execute the following codes:
 + Real-data Experiments Figure 4: 
 ```
 cd Scheme1
-nohup python3 instances/crpm.py --eps 1  --dest "/results/crpm-eps=1/" > crpm.out 2>&1 &
-nohup python3 instances/crpm.py --eps 0.5  --dest "/results/crpm-eps=0.5/" > crpm.out 2>&1 &
+uv run instances/crpm.py --eps 1  --dest "/results/crpm-eps=1/" > crpm.out 2>&1 &
+uv run instances/crpm.py --eps 0.5  --dest "/results/crpm-eps=0.5/" > crpm.out 2>&1 &
+```
+
+To launch all Scheme1 runs listed above, execute:
+```run
+cd Scheme1
+sh run.sh
 ```
