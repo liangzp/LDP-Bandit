@@ -1,6 +1,12 @@
 uv run instances/singleparam.py --eps 1  --dest "/results/single-param-eps=1/" > singleparam.out 2>&1 &
 uv run instances/singleparam.py --eps 0.5  --dest "/results/single-param-eps=0.5/" > singleparam.out 2>&1 &
 
+uv run instances/logistic.py --eps 1  --dest "/results/logistic-eps=1/" > logistic.out 2>&1 &
+uv run instances/logistic.py --eps 0.5  --dest "/results/logistic-eps=0.5/" > logistic.out 2>&1 &
+
+uv run instances/poisson.py --eps 1  --dest "/results/poisson-eps=1/" > poisson.out 2>&1 & 
+uv run instances/poisson.py --eps 0.5  --dest "/results/poisson-eps=0.5/" > poisson.out 2>&1 &
+
 uv run instances/multiparam.py --eps 1  --dest "/results/multi-param-eps=1/" > multiparam.out 2>&1 &
 uv run instances/multiparam.py --eps 0.5  --dest "/results/multi-param-eps=0.5/" > multiparam.out 2>&1 &
 

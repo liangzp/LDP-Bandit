@@ -174,11 +174,11 @@ class GreedySGDServer(Server):
             self.lambda_ = 0.00
             self.eta_constant = 5
         elif self.reward == 'poisson':
-            self.transform = lambda x: exp(x)
+            self.transform = lambda x: np.exp(x)
             self.lambda_ = 0.05
             self.eta_constant = 5
         elif self.reward == 'logistic':
-            self.transform = lambda x: 1/(1 + exp(-x))
+            self.transform = lambda x: 1/(1 + np.exp(-x))
             self.lambda_ = 0.05
             self.eta_constant = 5
         
@@ -223,10 +223,10 @@ class LDPGLMServer(Server):
             self.transform = lambda x: x
             self.mu = 1
         elif self.reward == 'poisson':
-            self.transform = lambda x: exp(x)
+            self.transform = lambda x: np.exp(x)
             self.mu = exp(-1)
         elif self.reward == 'logistic':
-            self.transform = lambda x: 1/(1 + exp(-x))
+            self.transform = lambda x: 1/(1 + np.exp(-x))
             self.mu = exp(-1)/(exp(-1)+1)**2
         self.c = 0
         self.t = 1
@@ -234,7 +234,7 @@ class LDPGLMServer(Server):
         
     def decide(self, contexts):
         try:
-            temp_matrix = np.linalg.inv(self.V + self.c * self.I) 
+            temp_matrix = np.linalg.inv(self.V_t + self.c * self.I) 
         except:
             temp_matrix = np.identity(self.d)
         action_values = []
@@ -402,9 +402,9 @@ class RSGDServer(Server):
         if self.reward == 'normal':
             self.transform = lambda x: x
         elif self.reward == 'poisson':
-            self.transform = lambda x: exp(x)
+            self.transform = lambda x: np.exp(x)
         elif self.reward == 'logistic':
-            self.transform = lambda x: 1/(1 + exp(-x))
+            self.transform = lambda x: 1/(1 + np.exp(-x))
     
     def set_param(self, theta):
         self.theta = theta
@@ -450,10 +450,10 @@ class RGLMServer(Server):
             self.transform = lambda x: x
             self.mu = 1
         elif self.reward == 'poisson':
-            self.transform = lambda x: exp(x)
+            self.transform = lambda x: np.exp(x)
             self.mu = exp(-1)
         elif self.reward == 'logistic':
-            self.transform = lambda x: 1/(1 + exp(-x))
+            self.transform = lambda x: 1/(1 + np.exp(-x))
             self.mu = exp(-1)/(exp(-1)+1)**2
         self.c = 0
         self.t = 1
@@ -464,7 +464,7 @@ class RGLMServer(Server):
         
     def decide(self, contexts):
         try:
-            temp_matrix = np.linalg.inv(self.V + self.c * self.I) 
+            temp_matrix = np.linalg.inv(self.V_t + self.c * self.I) 
         except:
             temp_matrix = np.identity(self.d)
         action_values = []

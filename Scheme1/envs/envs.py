@@ -16,10 +16,10 @@ class GaussianLinearEnvironment(Environment):
             self.transform = lambda x: x
             self.rg = lambda x: x
         elif self.mode == 'poisson':
-            self.transform = lambda x: exp(x)
+            self.transform = lambda x: np.exp(x)
             self.rg = lambda x: np.random.poisson(x)
         elif self.mode == 'logistic':
-            self.transform = lambda x: 1/(1 + exp(-x))
+            self.transform = lambda x: 1/(1 + np.exp(-x))
             self.rg = lambda x: np.random.binomial(1, x, 1)[0]
     
     def step(self, select_index):    
